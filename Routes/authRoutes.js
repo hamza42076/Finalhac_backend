@@ -25,7 +25,7 @@ authRoutes.post("/register", async (req, res) => {
         if(user){
             return res.status(400).json({message: "User already exists", status:400});
         }
-        const hashedPassword = await bcrypt.hash(password, Number(process.env.SALTROUNDS));
+        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALTROUNDS));
         console.log(hashedPassword);
         
         const newUser = new User({name, email, password: hashedPassword});

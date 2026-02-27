@@ -2,13 +2,16 @@ import express from "express";
 import authRoutes from "./Routes/authRoutes.js";
 import mongoose from "mongoose";
 import "dotenv/config";
+import cors from "cors"
 
 const PORT = 3000;
 
 
 const app = express();
 
+
 app.use(express.json());
+app.use(cors())
 app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
