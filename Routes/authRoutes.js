@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 
 const authRoutes = express.Router();
 
-authRoutes.post("/register", async (req, res) => {
+authRoutes.post("/signup", async (req, res) => {
     try {
         const { name, email, password } = req.body;
         if(!name || !email || !password){
