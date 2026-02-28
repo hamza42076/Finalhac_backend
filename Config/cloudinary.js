@@ -16,11 +16,15 @@ const initCloudinary = async () => {
 
         // Handle version 1.x and 2.x import differences
         cloudinary = cloudinaryModule.v2 || (cloudinaryModule.default && cloudinaryModule.default.v2) || cloudinaryModule.default;
-        CloudinaryStorage = storageModule.CloudinaryStorage;
+        CloudinaryStorage = storageModule.CloudinaryStorage || (storageModule.default && storageModule.default.CloudinaryStorage);
         multer = multerModule.default;
 
         if (!cloudinary || typeof cloudinary.config !== 'function') {
             throw new Error("Cloudinary library v2 object not found in the imported module.");
+        }
+
+        if (!CloudinaryStorage) {
+            throw new Error("CloudinaryStorage could not be found in the multer-storage-cloudinary module.");
         }
 
         cloudinary.config({
@@ -33,11 +37,16 @@ const initCloudinary = async () => {
             cloudinary: cloudinary,
             params: {
                 folder: 'clinic_reports',
-                allowed_formats: ['jpg', 'png', 'pdf'],
+                allowed_formats: ['jpg', 'png', 'pdf', 'jpeg', 'webp'],
             },
         });
 
-        upload = multer({ storage: storage });
+        const multerInstance = multer({ storage: storage });
+        upload = {
+            single: (field) => multerInstance.single(field),
+            array: (field, max) => multerInstance.array(field, max),
+            fields: (fields) => multerInstance.fields(fields)
+        };
         cloudinaryConfigured = true;
         console.log("✅ Cloudinary initialized successfully.");
     } catch (error) {
