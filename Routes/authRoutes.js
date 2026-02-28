@@ -3,8 +3,23 @@ import User from "../Models/User.js";
 import bcrypt from "bcrypt";
 import "dotenv/config";
 import jwt from "jsonwebtoken"; 
+import authenticateUser from "../middleware/auth.js";
 
 const authRoutes = express.Router();
+ 
+authRoutes.use(authenticateUser);
+authRoutes.get("/me", (req, res) => {
+    try {
+        res.json({
+            message: "User fetched successfully",
+            data: req.user,
+            status: 200
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Internal server error", status:500});
+    }
+});
 
 authRoutes.post("/signup", async (req, res) => {
     try {
