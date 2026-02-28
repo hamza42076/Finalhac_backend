@@ -7,8 +7,7 @@ import authenticateUser from "../middleware/auth.js";
 
 const authRoutes = express.Router();
  
-authRoutes.use(authenticateUser);
-authRoutes.get("/me", (req, res) => {
+authRoutes.get("/me",authenticateUser, (req, res) => {
     try {
         res.json({
             message: "User fetched successfully",
